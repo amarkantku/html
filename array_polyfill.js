@@ -110,6 +110,29 @@ let basic = {
 
 
   (function(){
+
+    const throttle = (func, delay) => {
+        let timer;
+        let lastRan;
+        return function() {
+          const context = this;
+          const args = arguments;
+          // first call time
+          if (!lastRan) {
+            func.apply(context, args)
+            lastRan = Date.now() // set first call as last call.
+          } else {
+            clearTimeout(timer)
+            timer = setTimeout(function() {
+                // calculate duration between now & last run, if duration lapsed the delay limit
+                if ((Date.now() - lastRan) >= delay) {
+                    func.apply(context, args)
+                    lastRan = Date.now()
+                }
+            }, delay - (Date.now() - lastRan))
+          }
+        }
+      }
   
     function debounce(fn, delay) {
         var time;
@@ -138,9 +161,34 @@ let basic = {
     //       inDebounce = setTimeout(() => func.apply(context, args), delay)
     //     }
     // }
+
+    var debounce1 = function (fn) {
+
+        // Setup a timer
+        var timeout;
+    
+        // Return a function to run debounced
+        return function () {
+    
+            // Setup the arguments
+            var context = this;
+            var args = arguments;
+    
+            // If there's a timer, cancel it
+            if (timeout) {
+                window.cancelAnimationFrame(timeout);
+            }
+    
+            // Setup the new requestAnimationFrame()
+            timeout = window.requestAnimationFrame(function () {
+                fn.apply(context, args);
+            });
+        }
+    };
+
     function onKeyPress(e){
         console.log(e.target.value);
     }
     const sreachInput = document.getElementById('sreachInput');
-    sreachInput.addEventListener('keypress', debounce(onKeyPress, 300));
+    sreachInput.addEventListener('keypress', debounce1(onKeyPress, 300));
   })()
