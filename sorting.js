@@ -23,3 +23,20 @@ function bubbleSort(array) {
 }
 console.log('Bubble sort => ', bubbleSort(array));
 
+function insertationSort(array) {
+    let i=1;
+    while(i< array.length) {
+        let j=i;
+        while(j> 0 && array[j-1] > array[j]) {
+            let temp = array[j-1];
+            array[j-1] = array[j];
+            array[j] = temp;
+            j--;
+        }
+        i++;
+    }
+    return array;
+}
+
+console.log('Insertation sort => ', insertationSort([-1,7,8,2,3,99,23,423,33,54,11,21]));
+
